@@ -6,7 +6,10 @@ namespace Kondital
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            double vægt = default;
+            int hPuls = default;
+            int mPuls = default;
+
         }
     }
 }
