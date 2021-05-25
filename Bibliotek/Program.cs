@@ -90,6 +90,10 @@ namespace Bibliotek
             #region Menu (efter endt gennemkørsel af ovenstående tests)
             bool contMenu = true;
 
+            // do-while løkken sikrer at menuen gentages indtil brugeren manuelt vælger at afslutte den.
+            // dog kan den teknisk set ikke slutte, da variablen der afgører det, aldrig ændres
+            // derimod anvendes der Environment.Exit(0) til at gennemtvinge dette. 
+            // På den måde gøres afsluttelsen til et aktivt valg og fortsættelse et passivt, i stedet for begge er aktivt (f.eks. via Y/N besvarelser efter hvert trin)
             do
             {
                 Console.WriteLine("Vælg venligst en mulighed:");
@@ -115,6 +119,10 @@ namespace Bibliotek
                     string l_navn = Console.ReadLine();
                     Console.Write("Angiv Låners Email: \n>");
                     string l_email = Console.ReadLine();
+
+                    // ID'et udregnes dynamisk ud fra størrelsen på listLaaner collectionen, da antallet af elementer i den, tildeles dynamisk ift til tilføjelser.
+                    // Dog ikke "idiot-sikker", da det kunne tænkes at en tidligere bruger slettes, hvorved en efterfølgende ny bruger ville
+                    // kunne risikeres at få tildelt samme bruger ID
                     int l_id = listLaaner.Count + 1;
 
                     listLaaner.Add(new Laaner(l_id, l_bib, l_navn, l_email));
