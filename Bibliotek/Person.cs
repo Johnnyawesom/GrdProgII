@@ -9,6 +9,8 @@ namespace Bibliotek
     {
         string _navn = default;
         string _email = default;
+
+        // Oprettes en collection til at indeholde udlånte bøger
         public List<Bog> laanteBoeger { get; set; } = new List<Bog>();
 
         // Her bruges der "_<variable>" til at kende forskel felter og egenskaber, i stedet for "this.<variable>".
@@ -25,6 +27,7 @@ namespace Bibliotek
 
         }
 
+        #region "Navn" Properties
         public string Navn
         {
             get
@@ -41,7 +44,9 @@ namespace Bibliotek
                     throw new ArgumentException("Navnet må ikke indeholde tal.");
             }
         }
+        #endregion
 
+        #region "Email" Properties
         public string Email
         {
             get
@@ -57,7 +62,7 @@ namespace Bibliotek
                     throw new ArgumentException("Ugyldig Email");
             }
         }
-    
+        #endregion
     }
 
 }

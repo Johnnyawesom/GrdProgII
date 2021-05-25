@@ -7,6 +7,7 @@ namespace Bibliotek
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("##### AFVIKLER INDLEDENDE TEST ######");
             // Del 1 Test
             Console.WriteLine("***** Del 1 udskrifts resultat *****");
             Laaner test = new Laaner(1, "test");
@@ -86,6 +87,43 @@ namespace Bibliotek
             UdskrivLaanere(listLaaner);
             #endregion
 
+            #region Menu (efter endt gennemkørsel af ovenstående tests)
+            bool contMenu = true;
+
+            do
+            {
+                Console.WriteLine("Vælg venligst en mulighed:");
+                Console.WriteLine("[a]: Angiv ny Låner");
+                Console.WriteLine("[q]: Afslut");
+
+                switch (Console.ReadLine())
+                {
+                    case "a":
+                        OpretLaaner();
+                        break;
+                    case "q":
+                        Environment.Exit(0);
+                        break;
+
+                }
+
+                void OpretLaaner()
+                {
+                    Console.Write("Angiv biblioteket: \n>");
+                    string l_bib = Console.ReadLine();
+                    Console.Write("Angiv Låners Navn: \n>");
+                    string l_navn = Console.ReadLine();
+                    Console.Write("Angiv Låners Email: \n>");
+                    string l_email = Console.ReadLine();
+                    int l_id = listLaaner.Count + 1;
+
+                    listLaaner.Add(new Laaner(l_id, l_bib, l_navn, l_email));
+
+                    Console.WriteLine();
+                }
+
+            } while (contMenu == true);
+            #endregion
         }
 
         static void UdskrivLaanere(List<Laaner> arrLaaner)
@@ -95,6 +133,8 @@ namespace Bibliotek
                 Console.WriteLine(laaner.HentLaaner());
             }
         }
+
+       
 
         
         

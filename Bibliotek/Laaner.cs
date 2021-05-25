@@ -38,6 +38,7 @@ namespace Bibliotek
                 // If-statement til at tjekke dato den pågældende bog blev udlejet.
                 if (bog.udlaansdato.Subtract(DateTime.Now).Days > 7)
                     result += " FORÆLDET!";
+                // For at tjekke om bogen er reserveret.
                 if (bog.reserveret == true)
                     result += $" Reserveret: {bog.reservDato}";
             }
