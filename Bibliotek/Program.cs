@@ -118,6 +118,8 @@ namespace Bibliotek
                 Console.WriteLine("[a]: Angiv ny Låner");
                 Console.WriteLine("[q]: Gem og Afslut");
                 Console.WriteLine("[i]: Indlæs data");
+                Console.WriteLine("[e]: Vis en enkelt bruger");
+             
 
                 switch (Console.ReadLine())
                 {
@@ -131,6 +133,13 @@ namespace Bibliotek
                     case "i":
                         Laes();
                         break;
+                    case "e":
+                        Console.WriteLine($"Der er i alt {listLaaner.Count} brugere.");
+                        Console.WriteLine("Angiv indekset på den bruger du gerne vil se:");
+                        int bruger = int.Parse(Console.ReadLine());
+                        UdskrivLaaner(listLaaner, bruger);
+                        break;
+
 
                 }
 
@@ -216,6 +225,12 @@ namespace Bibliotek
                 Console.WriteLine(laaner.HentLaaner());
             }
         }
+        
+        static void UdskrivLaaner(List<Laaner> arrLaaner, int laaner)
+        {
+            Console.WriteLine(arrLaaner[laaner-1].HentLaaner());
+        }
+
 
         #region User priming method.
         static void WaitTimer()
