@@ -86,15 +86,19 @@ namespace Bibliotek
                 bool contEmail = true;
                 do
                 {
-                    if (value.Contains("@") == true | value == "Ikke Angivet" | value == null) 
+                    if (value.Contains("@") == true || value == "Ikke Angivet") 
                     {
+                        Console.WriteLine("TESTER!");
                         _email = value;
                         contEmail = false;
                     }
                     else
                     {
-                        Console.WriteLine("Ugyldig Email.");
+                        Console.WriteLine("Ugyldig Email. Angiv venligst en ny:");
+                        value = Console.ReadLine();
                         contEmail = true;
+                        
+                        
                     }
                 } while (contEmail == true);
             }

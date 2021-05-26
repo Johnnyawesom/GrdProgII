@@ -7,7 +7,7 @@ namespace Bibliotek
     class Laaner : Person
     {
         public int laanerNummer { get; set; }
-        string bibliotek = default;
+        public string bibliotek { get; set; }
 
         // Del 2 (base delen tilhører Del 3)
         // Constructor der instantiere et Låner objekt med de angivne argumenter.
@@ -21,9 +21,13 @@ namespace Bibliotek
             this.laanerNummer = laanerNummer;
             this.bibliotek = bibliotek;
         }
-
+        public Laaner(int laanerNummer)
+        {
+            this.laanerNummer = laanerNummer;
+        }
         // Metode der returnere en string, hvori der er angivet den pågældende låner (og dennes bibliotek, antageligvis).
         // Valgfri (Bog) Tilføjet kode så det også returnere bøger og dato for udlejning.
+        #region HentLaaner metode
         public string HentLaaner()
         {
             if (Navn == null)
@@ -45,5 +49,6 @@ namespace Bibliotek
             result += "\n";
             return result;
         }
+        #endregion
     }
 }

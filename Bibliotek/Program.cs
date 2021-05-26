@@ -136,19 +136,27 @@ namespace Bibliotek
 
                 void OpretLaaner()
                 {
-                    Console.Write("Angiv biblioteket: \n>");
-                    string l_bib = Console.ReadLine();
-                    Console.Write("Angiv Låners Navn: \n>");
-                    string l_navn = Console.ReadLine();
-                    Console.Write("Angiv Låners Email: \n>");
-                    string l_email = Console.ReadLine();
-
+                    
+                    // BEMÆRK: Refactored kode. Funktionelt set det samme, men nu anvendes der en FindIndex metode til at finde indekset for den (just forinden) oprettede bruger.
+                    // Dette gøres for at de resterende værdier skal sættes for at valideringerne tager effekt, og ikke overføres via parametre i kaldet, 
+                    // hvilket forbigår get/set funktionaliteterne.
                     // ID'et udregnes dynamisk ud fra størrelsen på listLaaner collectionen, da antallet af elementer i den, tildeles dynamisk ift til tilføjelser.
                     // Dog ikke "idiot-sikker", da det kunne tænkes at en tidligere bruger slettes, hvorved en efterfølgende ny bruger ville
                     // kunne risikeres at få tildelt samme bruger ID
-                    int l_id = listLaaner.Count + 1;
+                    int laanID = (listLaaner.Count) + 1;
+                    
 
-                    listLaaner.Add(new Laaner(l_id, l_bib, l_navn, l_email));
+                    listLaaner.Add(new Laaner(laanID));
+                    int laanIDIndex = listLaaner.FindIndex(x => x.laanerNummer == laanID);
+                    Console.WriteLine(listLaaner.Count);
+                    Console.WriteLine(laanIDIndex);
+                    Console.WriteLine(laanID);
+                    Console.Write("Angiv biblioteket: \n>");
+                    listLaaner[laanIDIndex].bibliotek = Console.ReadLine();
+                    Console.Write("Angiv Låners Navn: \n>");
+                    listLaaner[laanIDIndex].Navn = Console.ReadLine();
+                    Console.Write("Angiv Låners Email: \n>");
+                    listLaaner[laanIDIndex].Email = Console.ReadLine();
 
                     Console.WriteLine();
                 }
