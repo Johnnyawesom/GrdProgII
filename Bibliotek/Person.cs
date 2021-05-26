@@ -36,12 +36,32 @@ namespace Bibliotek
             }
             set
             {
-                // Validering for at tjekke om navnet er gyldigt (udenfor nummerologiske fanatikerer)
-                if (value.Any(char.IsDigit) == false)
+                #region Legacy code (Validering)
+                // Validering for at tjekke om navnet er gyldigt (udenfor nummerologiske fanatikerer). Anvendes en Throw i stedet for Try..Catch..Finally, 
+                // Eftersom det ikke ville være ugyldigt hvis der blev indtastet et ciffer i en streng, som så ikke ville generere en fejl.
+                /*if (value.Any(char.IsDigit) == false)
                     _navn = value;
             
                 else
-                    throw new ArgumentException("Navnet må ikke indeholde tal.");
+                    throw new ArgumentException("Navnet må ikke indeholde tal.");*/
+                #endregion
+
+                // Validering sker ved at koden indsættes i en do..while løkke, som afvikles indtil input godtages (i dette tilfælde, at navnet ikke indeholder tal)
+                bool contName = true;
+                do
+                {
+                    if (value.Any(char.IsDigit) == false)
+                    {
+                        _navn = value;
+                        contName = false;
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Navnet må ikke indeholde tal.");
+                        contName = true;
+                    }
+                } while (contName == true);
             }
         }
         #endregion
@@ -54,12 +74,29 @@ namespace Bibliotek
                 return _email;
             }
             set
-            {   
+            {
+                #region Legacy code
                 // Validering for at tjekke det er en gyldig email (vi ser bort fra .com osv), eller om den blot ikke er angivet.
-                if (value.Contains("@") == true || value == "Ikke Angivet")
+                /*if (value.Contains("@") == true || value == "Ikke Angivet")
                     _email = value;
                 else
-                    throw new ArgumentException("Ugyldig Email");
+                    throw new ArgumentException("Ugyldig Email");*/
+                #endregion
+                // Validering via do-while løkke, i kræft af bools værdi der tjekkes hver gennemløb, og ændres afhængig af udfaldet af det if-statement der er inde i løkken.
+                bool contEmail = true;
+                do
+                {
+                    if (value.Contains("@") == true | value == "Ikke Angivet" | value == null) 
+                    {
+                        _email = value;
+                        contEmail = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ugyldig Email.");
+                        contEmail = true;
+                    }
+                } while (contEmail == true);
             }
         }
         #endregion

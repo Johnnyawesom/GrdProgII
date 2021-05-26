@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.IO;
+using System.Text;
 
 namespace Bibliotek
 {
@@ -7,12 +10,25 @@ namespace Bibliotek
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("##### AFVIKLER INDLEDENDE TEST ######");
+            #region User priming. Fluff.
+            Console.Write("Running initialization test. Please wait.");
+            WaitTimer();
+            
+            Console.WriteLine();
+            Console.Write("Making meat-bags wait so they think I'm an advanced program.");
+            WaitTimer();
+
+            Console.WriteLine();
+            Console.Write("Running sanity checks. Please wait.");
+            WaitTimer();
+            Console.WriteLine();
+            #endregion
+
             // Del 1 Test
             Console.WriteLine("***** Del 1 udskrifts resultat *****");
             Laaner test = new Laaner(1, "test");
             Console.WriteLine(test.HentLaaner());
-
+            Console.WriteLine("-------------------------------------");
             // Del 2 Test
             List<Laaner> listLaaner = new List<Laaner>();
             listLaaner.Add(new Laaner(2, "Sønderborg"));
@@ -26,6 +42,7 @@ namespace Bibliotek
             listLaaner[2].Navn = "Karsten Karstensen";
             listLaaner[2].Email = "Karsten@Askefis.muh";
             UdskrivLaanere(listLaaner);
+
             #region Selvstændig tilføjelse (Validation):
             /*
              * listLaaner[2].Navn = "K4rsten Karstensen"; // Ville fejle da der er valideringstjek ift om navn-strengen indeholder tal.
@@ -42,6 +59,7 @@ namespace Bibliotek
                 Console.WriteLine(listLaaner.Find(x => x.laanerNummer == laanerNummer).HentLaaner());
             }
             #endregion
+
             #region Valgfri del (Bog):
             List<Bog> bogListe = new List<Bog>();
             bogListe.Add(new Bog("En hest i modvind", "Karsten Karstensen", "12345"));
@@ -53,6 +71,7 @@ namespace Bibliotek
             Console.WriteLine("\n\n**** VALGFRI: BOG ****");
             UdskrivLaanere(listLaaner);
             #endregion
+
             #region Metode til at udleje/reservere en bog.
             void UdlaanBog(string ISBN, int laanerNummer)
             {
@@ -86,19 +105,18 @@ namespace Bibliotek
             UdlaanBog("12345", 3);
             UdskrivLaanere(listLaaner);
             #endregion
+      
 
             #region Menu (efter endt gennemkørsel af ovenstående tests)
             bool contMenu = true;
 
             // do-while løkken sikrer at menuen gentages indtil brugeren manuelt vælger at afslutte den.
-            // dog kan den teknisk set ikke slutte, da variablen der afgører det, aldrig ændres
-            // derimod anvendes der Environment.Exit(0) til at gennemtvinge dette. 
-            // På den måde gøres afsluttelsen til et aktivt valg og fortsættelse et passivt, i stedet for begge er aktivt (f.eks. via Y/N besvarelser efter hvert trin)
             do
             {
                 Console.WriteLine("Vælg venligst en mulighed:");
                 Console.WriteLine("[a]: Angiv ny Låner");
-                Console.WriteLine("[q]: Afslut");
+                Console.WriteLine("[q]: Gem og Afslut");
+                Console.WriteLine("[i]: Indlæs data");
 
                 switch (Console.ReadLine())
                 {
@@ -106,7 +124,11 @@ namespace Bibliotek
                         OpretLaaner();
                         break;
                     case "q":
-                        Environment.Exit(0);
+                        contMenu = false;
+                        Gem();
+                        break;
+                    case "i":
+                        Laes();
                         break;
 
                 }
@@ -132,6 +154,54 @@ namespace Bibliotek
 
             } while (contMenu == true);
             #endregion
+            Gem();
+
+            #region Gem og Læs metode
+            void Gem()
+            {
+                // Der angives her en dynamisk sti, den noget lettere men langt mere rigid hårdkodning, eftersom jeg ikke kan forvente, at programmet har adgang til at gemme
+                // direkte på C:\ drevet hver gang, og endnu mindre, at vedkommendes lokale brugernavn er det samme som mit.
+                string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.txt");
+                List<string> tekst = new List<string>();
+               
+                foreach (Laaner p in listLaaner)
+                {
+                    tekst.Add(p.HentLaaner());
+                }
+                // Try-Catch i tilfælde af at ovennævnte sti ikke kan skrives til
+                try
+                {
+                    File.WriteAllLines(sti, tekst, Encoding.UTF8);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Console.WriteLine("Du har ikke tilladelse til at gemme filen i den pågældende sti.");
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Console.WriteLine("Den pågældende sti eksisterer ikke.");
+                }
+            }
+
+            void Laes()
+            {
+                string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.txt");
+                try
+                {
+                    string[] tekst = File.ReadAllLines(sti, Encoding.UTF8);
+                    foreach (string s in tekst)
+                    {
+                        Console.WriteLine(s);
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.WriteLine("Tjek venligst din sti, eftersom der ikke kunnne findes nogen fil med det navn.");
+                }
+                
+                Console.WriteLine("################################  Data loaded.  ##############################################");
+            }
+            #endregion
         }
 
         static void UdskrivLaanere(List<Laaner> arrLaaner)
@@ -142,9 +212,21 @@ namespace Bibliotek
             }
         }
 
-       
+        #region User priming method.
+        static void WaitTimer()
+        {
+            Console.Write(".");
+            Thread.Sleep(500);
+            Console.Write(".");
+            Thread.Sleep(500);
+            Console.Write(".");
+            Thread.Sleep(500);
+            Console.Write(".");
+            Thread.Sleep(500);
+        }
+        #endregion
 
-        
-        
+       
     }
 }
+
