@@ -1,7 +1,7 @@
 ﻿# Text Crawler
 - _Author: Mads Søndergaard_
 - _Date: 26/05/2021_
-- _Client: Semiotic Research Group
+- _Client: Semiotic Research Group_
 
 ### Goals:
 A program that is capable of parsing a given text in accordance with various predetermined rules, in order
