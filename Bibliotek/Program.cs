@@ -49,6 +49,7 @@ namespace Bibliotek
              * listLaaner[2].Email = "hej"; // Ville ligeledes fejle, da der tjekkes om strengen indeholder et '@', og hvis ikke, om den er sat til den hårdkodede "mangler" kode ("Ikke Angivet")
              */
             #endregion
+
             #region Valgfri del (Find):
             Console.WriteLine("###### OPTIONAL ######");
             Console.WriteLine("FindLaanere(666):");
@@ -96,6 +97,7 @@ namespace Bibliotek
 
             }
             #endregion
+
             #region Valgfri/Selvstændig (Forsinket aflevering)
             // Bare for at oprette et eksempel:
             bogListe[1].udlaansdato = DateTime.Now.AddDays(10);
@@ -105,7 +107,6 @@ namespace Bibliotek
             UdlaanBog("12345", 3);
             UdskrivLaanere(listLaaner);
             #endregion
-      
 
             #region Menu (efter endt gennemkørsel af ovenstående tests)
             bool contMenu = true;
@@ -154,7 +155,6 @@ namespace Bibliotek
 
             } while (contMenu == true);
             #endregion
-            Gem();
 
             #region Gem og Læs metode
             void Gem()
