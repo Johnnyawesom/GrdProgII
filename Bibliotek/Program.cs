@@ -148,9 +148,6 @@ namespace Bibliotek
 
                     listLaaner.Add(new Laaner(laanID));
                     int laanIDIndex = listLaaner.FindIndex(x => x.laanerNummer == laanID);
-                    Console.WriteLine(listLaaner.Count);
-                    Console.WriteLine(laanIDIndex);
-                    Console.WriteLine(laanID);
                     Console.Write("Angiv biblioteket: \n>");
                     listLaaner[laanIDIndex].bibliotek = Console.ReadLine();
                     Console.Write("Angiv Låners Navn: \n>");

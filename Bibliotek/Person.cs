@@ -59,6 +59,7 @@ namespace Bibliotek
                     else
                     {
                         Console.WriteLine("Navnet må ikke indeholde tal.");
+                        value = Console.ReadLine();
                         contName = true;
                     }
                 } while (contName == true);
