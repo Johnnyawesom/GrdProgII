@@ -241,11 +241,11 @@ namespace Bibliotek
             /// </summary>
             void Laes()
             {
-                string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "tet.txt");
+                string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.txt");
                 try
                 {
                     // Hver linje fra tekstfilen indlæses som hver sit element i en string array:
-                    /*string[] tekst = File.ReadAllLines(sti, Encoding.UTF8);
+                    string[] tekst = File.ReadAllLines(sti, Encoding.UTF8);
                     foreach (string s in tekst)
                     {
                         // Hvert element opdeles ved hver ';':
@@ -257,7 +257,7 @@ namespace Bibliotek
                             listLaaner.Add(new Laaner(laanID)); // Låneren tilføjes via de nye ID
                             int laanIDIndex = listLaaner.FindIndex(x => x.laanerNummer == laanID); // Og det nye entrys index lokaliseres
 
-                            // Hvorefter vi kan bruge set til at angive værdierne lagret i arrayet, ud fra et standardiseret format (ID;Navn;Email;Bibliotek;Bog;Bog;Bog;[...]
+                            // Hvorefter vi kan bruge set til at angive værdierne lagret i arrayet, ud fra et standardiseret format (ID;Navn;Email;Bibliotek;Bog;Bog;Bog;[...])
                             listLaaner[laanIDIndex].Navn = data[1]; 
                             listLaaner[laanIDIndex].Email = data[2];
                             listLaaner[laanIDIndex].bibliotek = data[3];
@@ -269,7 +269,7 @@ namespace Bibliotek
                                 listLaaner[laanIDIndex].laanteBoeger.Add(bogListe[idBog]);
                             }
                         }
-                    }*/
+                    }
 
                 }
                 catch (FileNotFoundException)
