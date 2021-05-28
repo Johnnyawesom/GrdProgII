@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 using Bibliotek;
 
@@ -18,11 +19,6 @@ namespace XUnitTestProject1
 
             // Assert
             Assert.Equal(expected, actual);
-        }
-
-        public void TestCollection()
-        {
-            List<Laaner> collTest =  
         }
     }
 }
