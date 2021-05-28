@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Bibliotek
 {
-    class Bog 
+    public class Bog 
     {
         public string titel { get; }
         public string forfatter { get; }

@@ -18,8 +18,7 @@ namespace TextCrawler
             switch(Console.ReadLine())
             {
                 case "l":
-                    Console.WriteLine("Please provide the path to the file you wish to process:");
-                    lPath = Console.ReadLine();
+                    ImpExp.Laes();
                     break;
                 case "s":
                     //

@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Bibliotek
 {
-    class Laaner : Person
+
+    public class Laaner : Person
     {
         public int laanerNummer { get; set; }
         public string bibliotek { get; set; }

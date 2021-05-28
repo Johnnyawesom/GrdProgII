@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Bibliotek
 {
-    class Person
+    public class Person
     {
         string _navn = default;
         string _email = default;
@@ -89,7 +89,6 @@ namespace Bibliotek
                 {
                     if (value.Contains("@") == true || value == "Ikke Angivet") 
                     {
-                        Console.WriteLine("TESTER!");
                         _email = value;
                         contEmail = false;
                     }

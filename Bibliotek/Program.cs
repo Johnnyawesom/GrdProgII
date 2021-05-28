@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace Bibliotek
 {
@@ -73,6 +74,13 @@ namespace Bibliotek
             UdskrivLaanere(listLaaner);
             #endregion
 
+            /// <summary>
+            /// Method for renting out/reserving a given book. The method finds the renter via their membernummber (laanerNummer), and the book via its ISBN number.
+            /// If the book in question isn't rented nor reserved, the book is added to the rentees list of rented books, and registers the date and time as well as rented status
+            /// on the book itself.
+            /// Otherwise, if the book is rented out, the user is asked if they wish to reserve it. If they agree, the books entry in the bogListe Collection is registered as reserved,
+            /// and the reservation deadline is set to 1 month in the future.
+            /// </summary>
             #region Metode til at udleje/reservere en bog.
             void UdlaanBog(string ISBN, int laanerNummer)
             {
@@ -80,9 +88,9 @@ namespace Bibliotek
                 int idBog = bogListe.FindIndex(x => x.ISBN == ISBN);
                 if (bogListe[idBog].udlaant == false && bogListe[idBog].reserveret == false)
                 { 
-                listLaaner[idLaaner].laanteBoeger.Add(bogListe[idBog]);
-                bogListe[idBog].udlaansdato = DateTime.Now;
-                bogListe[idBog].udlaant = true;
+                    listLaaner[idLaaner].laanteBoeger.Add(bogListe[idBog]);
+                    bogListe[idBog].udlaansdato = DateTime.Now;
+                    bogListe[idBog].udlaant = true;
                 }
                 else if (bogListe[idBog].udlaant == true && bogListe[idBog].reserveret == false)
                 {
@@ -119,6 +127,7 @@ namespace Bibliotek
                 Console.WriteLine("[q]: Gem og Afslut");
                 Console.WriteLine("[i]: Indlæs data");
                 Console.WriteLine("[e]: Vis en enkelt bruger");
+                Console.WriteLine("[f]: List brugere");
              
 
                 switch (Console.ReadLine())
@@ -139,10 +148,28 @@ namespace Bibliotek
                         int bruger = int.Parse(Console.ReadLine());
                         UdskrivLaaner(listLaaner, bruger);
                         break;
+                    case "f":
+                        foreach (Laaner p in listLaaner)
+                        {
+                            string saveLaaner = $"{p.laanerNummer};{p.Navn};{p.Email};{p.bibliotek}";
+                            foreach (Bog laantBog in p.laanteBoeger)
+                            {
+                                saveLaaner += $";{laantBog.ISBN}";
+                            }
+                            Console.WriteLine(saveLaaner);
+                        }
+                        break;
 
 
                 }
 
+                /// <summary>
+                /// Method for creating new rentees in the system. It first calculates the ID key for the entry by looking at the Count of the listLaaner collection.
+                /// It then creates the entry, fetches the index (as the above method isn't foolproof), and process to set library, name, and email, ensuring that 
+                /// the constructor validations are triggered correcly.
+                /// </summary>
+                /// <seealso cref="Person.Navn"/>
+                /// <seealso cref="Person.Email"/>
                 void OpretLaaner()
                 {
                     
@@ -171,16 +198,24 @@ namespace Bibliotek
             #endregion
 
             #region Gem og Læs metode
+            /// <summary>
+            /// Method for saving the list of rentees. It uses a default path (Desktop\test.txt) to store the string, but also includes exception handling in case the path doesn't exist.
+            /// </summary>
             void Gem()
             {
                 // Der angives her en dynamisk sti, den noget lettere men langt mere rigid hårdkodning, eftersom jeg ikke kan forvente, at programmet har adgang til at gemme
                 // direkte på C:\ drevet hver gang, og endnu mindre, at vedkommendes lokale brugernavn er det samme som mit.
                 string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.txt");
                 List<string> tekst = new List<string>();
-               
+
                 foreach (Laaner p in listLaaner)
                 {
-                    tekst.Add(p.HentLaaner());
+                    string saveLaaner = $"{p.laanerNummer};{p.Navn};{p.Email};{p.bibliotek}";
+                    foreach (Bog laantBog in p.laanteBoeger)
+                    {
+                        saveLaaner += $";{laantBog.ISBN}";
+                    }
+                    tekst.Add(saveLaaner);
                 }
                 // Try-Catch i tilfælde af at ovennævnte sti ikke kan skrives til
                 try
@@ -197,21 +232,51 @@ namespace Bibliotek
                 }
             }
 
+            /// <summary>
+            /// Method for loading data from a txt-file. Each line is read in sequence, and split by each ';' to be stored in a string array.
+            /// Each index then corresponds to a certain field (as save and load have been standardized), so each index of the array can
+            /// be safely assigned to a given field in the listLaaner collection.
+            /// Finally, any books already rented by new entries are added directly to the laanteBoege collection, to avoid
+            /// confounding data - such as date of rent, etc.
+            /// </summary>
             void Laes()
             {
-                string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.txt");
+                string sti = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "tet.txt");
                 try
                 {
-                    string[] tekst = File.ReadAllLines(sti, Encoding.UTF8);
+                    // Hver linje fra tekstfilen indlæses som hver sit element i en string array:
+                    /*string[] tekst = File.ReadAllLines(sti, Encoding.UTF8);
                     foreach (string s in tekst)
                     {
-                        Console.WriteLine(s);
-                    }
+                        // Hvert element opdeles ved hver ';':
+                        string[] data = s.Split(';');
+                        if (listLaaner.Any(x => x.laanerNummer == int.Parse(data[0])) == false)     // Der tjekkes om låneren allerede eksisterer i systemet. Her bruges ID og ikke Index
+                        {
+                            
+                            int laanID = listLaaner.Count + 1; // Nyt ID oprettes ud fra størrelsen på listLaaner collectionen.
+                            listLaaner.Add(new Laaner(laanID)); // Låneren tilføjes via de nye ID
+                            int laanIDIndex = listLaaner.FindIndex(x => x.laanerNummer == laanID); // Og det nye entrys index lokaliseres
+
+                            // Hvorefter vi kan bruge set til at angive værdierne lagret i arrayet, ud fra et standardiseret format (ID;Navn;Email;Bibliotek;Bog;Bog;Bog;[...]
+                            listLaaner[laanIDIndex].Navn = data[1]; 
+                            listLaaner[laanIDIndex].Email = data[2];
+                            listLaaner[laanIDIndex].bibliotek = data[3];
+                            
+                            // For hvert element udover det fjerde (dvs for hver bog), bruges værdien til at registrere den pågælden bog som udlejet til låneren
+                            for (int i = 0; i < (data.Length - 4); i++)
+                            {
+                                int idBog = bogListe.FindIndex(x => x.ISBN == data[i+4]);
+                                listLaaner[laanIDIndex].laanteBoeger.Add(bogListe[idBog]);
+                            }
+                        }
+                    }*/
+
                 }
                 catch (FileNotFoundException)
                 {
                     Console.WriteLine("Tjek venligst din sti, eftersom der ikke kunnne findes nogen fil med det navn.");
                 }
+                
                 
                 Console.WriteLine("################################  Data loaded.  ##############################################");
             }
@@ -228,6 +293,8 @@ namespace Bibliotek
         
         static void UdskrivLaaner(List<Laaner> arrLaaner, int laaner)
         {
+            // Bemærk at der her fratrækkes 1, for at gøre funktionaliteten mere almen menneskevenlig (eftersom vi ikke bør antage, 
+            // at alle ved, at indeks starter fra 0, men at de fleste antager det starter ved 1.
             Console.WriteLine(arrLaaner[laaner-1].HentLaaner());
         }
 
