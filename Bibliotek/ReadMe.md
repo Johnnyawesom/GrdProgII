@@ -2,7 +2,7 @@
 **Author:** Mads Søndergaard <br>
 **Organisation:** EUC Syd <br>
 **Project Lead:** Christian Thygesen <br>
-**Deadline:** 3rd of June, 2021
+**Deadline:** 02-06-2021
 
 ----
 ##### Bemærk: 
@@ -12,6 +12,12 @@ for i den oprindelige formulering.
 
 ----
 ### Changelog:
+- v1.3.0
+  - Added new "List all books" function.
+  - Refactored code to ensure logical coherence between classes and methods
+  - Redesigned menu to be more reader-friendly
+  - Added keylisten to intro section to allow for skipping (still minor issue with mid-sequence execution)
+  
 - v1.2
   - Expanded Load function so that it now mounts data, rather than simply displaying it.
   - Added minor example of Unit Testing (see: XUnitTestProject1 in this repo).
