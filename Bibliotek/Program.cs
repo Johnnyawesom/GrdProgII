@@ -25,6 +25,7 @@ namespace Bibliotek
             Console.WriteLine();
             #endregion
 
+            #region Test-run
             // Del 1 Test
             Console.WriteLine("\n***** Del 1 udskrifts resultat *****");
             Laaner test = new Laaner(1, "test");
@@ -45,7 +46,7 @@ namespace Bibliotek
             listLaaner[2].Navn = "Karsten Karstensen";
             listLaaner[2].Email = "Karsten@Askefis.muh";
             Laaner.UdskrivLaanere(listLaaner);
-            
+            #endregion
 
             #region Selvstændig tilføjelse (Validation):
             /*
@@ -76,9 +77,10 @@ namespace Bibliotek
             Console.WriteLine("\n\n\n**** VALGFRI: BOG ****");
             Laaner.UdskrivLaanere(listLaaner);
 
-            
+
             #endregion
 
+            #region Metode til at udleje/reservere en bog.
             /// <summary>
             /// Method for renting out/reserving a given book. The method finds the renter via their membernummber (laanerNummer), and the book via its ISBN number.
             /// If the book in question isn't rented nor reserved, the book is added to the rentees list of rented books, and registers the date and time as well as rented status
@@ -86,7 +88,6 @@ namespace Bibliotek
             /// Otherwise, if the book is rented out, the user is asked if they wish to reserve it. If they agree, the books entry in the bogListe Collection is registered as reserved,
             /// and the reservation deadline is set to 1 month in the future.
             /// </summary>
-            #region Metode til at udleje/reservere en bog.
             void UdlaanBog(string ISBN, int laanerNummer)
             {
                 int idLaaner = listLaaner.FindIndex(x => x.LaanerNummer == laanerNummer);
@@ -129,7 +130,7 @@ namespace Bibliotek
             // do-while løkken sikrer at menuen gentages indtil brugeren manuelt vælger at afslutte den.
             do
             {
-                Console.WriteLine("Vælg venligst en mulighed:");
+                Console.WriteLine("\n\nVælg venligst en mulighed:");
                 Console.WriteLine("\n> Brugere:");
                 Console.WriteLine(">> [a]: Angiv ny Låner");
                 Console.WriteLine(">> [e]: Vis en enkelt bruger");
@@ -298,15 +299,11 @@ namespace Bibliotek
         #region User priming method.
         static void WaitTimer()
         {
-           
-            Console.Write(".");
-            Thread.Sleep(200);
-            Console.Write(".");
-            Thread.Sleep(200);
-            Console.Write(".");
-            Thread.Sleep(200);
-            Console.Write(".");
-            Thread.Sleep(200);
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Write(".");
+                Thread.Sleep(200);
+            }
         }
         #endregion
 
