@@ -26,20 +26,22 @@ namespace Bibliotek
             #endregion
 
             // Del 1 Test
-            Console.WriteLine("***** Del 1 udskrifts resultat *****");
+            Console.WriteLine("\n***** Del 1 udskrifts resultat *****");
             Laaner test = new Laaner(1, "test");
             Console.WriteLine(test.HentLaaner());
             Console.WriteLine("-------------------------------------");
+            
             // Del 2 Test
+            
             List<Laaner> listLaaner = new List<Laaner>();
             listLaaner.Add(new Laaner(2, "Sønderborg"));
             listLaaner.Add(new Laaner(3, "Tønder"));
             listLaaner.Add(new Laaner(666, "Herlev"));
-            Console.WriteLine("***** Del 2 udskrifts resultat *****");
+            Console.WriteLine("\n***** Del 2 udskrifts resultat *****");
             Laaner.UdskrivLaanere(listLaaner);
 
             // Del 3 Test
-            Console.WriteLine("***** Del 3 udskrifts resultat *****");
+            Console.WriteLine("\n***** Del 3 udskrifts resultat *****");
             listLaaner[2].Navn = "Karsten Karstensen";
             listLaaner[2].Email = "Karsten@Askefis.muh";
             Laaner.UdskrivLaanere(listLaaner);
@@ -71,9 +73,9 @@ namespace Bibliotek
             // Metoden til at udleje en bog kaldes, og derefter kaldes oversigten over lånere igen, for at vise, at det er registrere.
             UdlaanBog("12345", 3);
             UdlaanBog("23456", 3);
-            Console.WriteLine("\n\n**** VALGFRI: BOG ****");
+            Console.WriteLine("\n\n\n**** VALGFRI: BOG ****");
             Laaner.UdskrivLaanere(listLaaner);
-            Bog testBog = new Bog("Test", "Karsten", "34567");
+
             
             #endregion
 
@@ -111,10 +113,12 @@ namespace Bibliotek
 
             #region Valgfri/Selvstændig (Forsinket aflevering)
             // Bare for at oprette et eksempel:
+            Console.WriteLine("\n***** Eks 1: Forsinket Aflevering ******");
             bogListe[1].Udlaansdato = DateTime.Now.AddDays(10);
             Laaner.UdskrivLaanere(listLaaner);
 
             // Reservation
+            Console.WriteLine("\n***** Eks 2: Reservation ******");
             UdlaanBog("12345", 3);
             Laaner.UdskrivLaanere(listLaaner);
             #endregion
