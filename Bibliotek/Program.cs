@@ -36,13 +36,14 @@ namespace Bibliotek
             listLaaner.Add(new Laaner(3, "Tønder"));
             listLaaner.Add(new Laaner(666, "Herlev"));
             Console.WriteLine("***** Del 2 udskrifts resultat *****");
-            UdskrivLaanere(listLaaner);
+            Laaner.UdskrivLaanere(listLaaner);
 
             // Del 3 Test
             Console.WriteLine("***** Del 3 udskrifts resultat *****");
             listLaaner[2].Navn = "Karsten Karstensen";
             listLaaner[2].Email = "Karsten@Askefis.muh";
-            UdskrivLaanere(listLaaner);
+            Laaner.UdskrivLaanere(listLaaner);
+            
 
             #region Selvstændig tilføjelse (Validation):
             /*
@@ -58,7 +59,7 @@ namespace Bibliotek
 
             void FindLaanere(int laanerNummer)
             {
-                Console.WriteLine(listLaaner.Find(x => x.laanerNummer == laanerNummer).HentLaaner());
+                Console.WriteLine(listLaaner.Find(x => x.LaanerNummer == laanerNummer).HentLaaner());
             }
             #endregion
 
@@ -71,7 +72,9 @@ namespace Bibliotek
             UdlaanBog("12345", 3);
             UdlaanBog("23456", 3);
             Console.WriteLine("\n\n**** VALGFRI: BOG ****");
-            UdskrivLaanere(listLaaner);
+            Laaner.UdskrivLaanere(listLaaner);
+            Bog testBog = new Bog("Test", "Karsten", "34567");
+            
             #endregion
 
             /// <summary>
@@ -84,21 +87,21 @@ namespace Bibliotek
             #region Metode til at udleje/reservere en bog.
             void UdlaanBog(string ISBN, int laanerNummer)
             {
-                int idLaaner = listLaaner.FindIndex(x => x.laanerNummer == laanerNummer);
+                int idLaaner = listLaaner.FindIndex(x => x.LaanerNummer == laanerNummer);
                 int idBog = bogListe.FindIndex(x => x.ISBN == ISBN);
-                if (bogListe[idBog].udlaant == false && bogListe[idBog].reserveret == false)
+                if (bogListe[idBog].Udlaant == false && bogListe[idBog].Reserveret == false)
                 { 
                     listLaaner[idLaaner].laanteBoeger.Add(bogListe[idBog]);
-                    bogListe[idBog].udlaansdato = DateTime.Now;
-                    bogListe[idBog].udlaant = true;
+                    bogListe[idBog].Udlaansdato = DateTime.Now;
+                    bogListe[idBog].Udlaant = true;
                 }
-                else if (bogListe[idBog].udlaant == true && bogListe[idBog].reserveret == false)
+                else if (bogListe[idBog].Udlaant == true && bogListe[idBog].Reserveret == false)
                 {
                     Console.WriteLine("Bogen er desværre udlånt. Vil du reservere den? [Y/N]");
                     if (Console.ReadLine() == "Y")
                     {
-                        bogListe[idBog].reservDato = DateTime.Now.AddMonths(1);
-                        bogListe[idBog].reserveret = true;
+                        bogListe[idBog].ReservDato = DateTime.Now.AddMonths(1);
+                        bogListe[idBog].Reserveret = true;
                     }
                  
                 }
@@ -108,12 +111,12 @@ namespace Bibliotek
 
             #region Valgfri/Selvstændig (Forsinket aflevering)
             // Bare for at oprette et eksempel:
-            bogListe[1].udlaansdato = DateTime.Now.AddDays(10);
-            UdskrivLaanere(listLaaner);
+            bogListe[1].Udlaansdato = DateTime.Now.AddDays(10);
+            Laaner.UdskrivLaanere(listLaaner);
 
             // Reservation
             UdlaanBog("12345", 3);
-            UdskrivLaanere(listLaaner);
+            Laaner.UdskrivLaanere(listLaaner);
             #endregion
 
             #region Menu (efter endt gennemkørsel af ovenstående tests)
@@ -123,17 +126,24 @@ namespace Bibliotek
             do
             {
                 Console.WriteLine("Vælg venligst en mulighed:");
-                Console.WriteLine("[a]: Angiv ny Låner");
-                Console.WriteLine("[q]: Gem og Afslut");
-                Console.WriteLine("[i]: Indlæs data");
-                Console.WriteLine("[e]: Vis en enkelt bruger");
-                Console.WriteLine("[f]: List brugere");
+                Console.WriteLine("\n> Brugere:");
+                Console.WriteLine(">> [a]: Angiv ny Låner");
+                Console.WriteLine(">> [e]: Vis en enkelt bruger");
+                Console.WriteLine(">> [f]: Vise alle brugere");
+                Console.WriteLine("\n> Bøger:");
+                Console.WriteLine(">> [b]: Vis alle bøger");
+                Console.WriteLine(">> [u]: Udlån Bog");
+                Console.WriteLine("\n> Funktionelt:");
+                Console.WriteLine(">> [q]: Gem og Afslut");
+                Console.WriteLine(">> [i]: Indlæs data");
+               
+
              
 
                 switch (Console.ReadLine())
                 {
                     case "a":
-                        OpretLaaner();
+                        Laaner.OpretLaaner(listLaaner);
                         break;
                     case "q":
                         contMenu = false;
@@ -146,12 +156,24 @@ namespace Bibliotek
                         Console.WriteLine($"Der er i alt {listLaaner.Count} brugere.");
                         Console.WriteLine("Angiv indekset på den bruger du gerne vil se:");
                         int bruger = int.Parse(Console.ReadLine());
-                        UdskrivLaaner(listLaaner, bruger);
+                        try
+                        {
+                            Laaner.UdskrivLaaner(listLaaner, bruger);
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            Console.WriteLine("Brugeren kunne ikke findes. Bemærk venligst at der bedes om indeks nummmer, og ikke Låner ID");
+                        }
+                        finally
+                        {
+                            contMenu = true;
+                        }
                         break;
+
                     case "f":
                         foreach (Laaner p in listLaaner)
                         {
-                            string saveLaaner = $"{p.laanerNummer};{p.Navn};{p.Email};{p.bibliotek}";
+                            string saveLaaner = $"{p.LaanerNummer};{p.Navn};{p.Email};{p.Bibliotek}";
                             foreach (Bog laantBog in p.laanteBoeger)
                             {
                                 saveLaaner += $";{laantBog.ISBN}";
@@ -160,41 +182,24 @@ namespace Bibliotek
                         }
                         break;
 
-
+                    case "u":
+                        Console.WriteLine("Angiv ISBN-nummer på bogen du gerne vil udlåne (f.eks. 12345):");
+                        string uISBN = Console.ReadLine();
+                        Console.WriteLine("Angiv Låner-nummeret på den person der vil låne bogen (f.eks. 666):");
+                        int uLaaner = int.Parse(Console.ReadLine());
+                        UdlaanBog(uISBN, uLaaner);
+                        break;
+                    case "b":
+                        Bog.GetBoeger(bogListe);
+                        break;
+                        
+                        
+                       
                 }
-
-                /// <summary>
-                /// Method for creating new rentees in the system. It first calculates the ID key for the entry by looking at the Count of the listLaaner collection.
-                /// It then creates the entry, fetches the index (as the above method isn't foolproof), and process to set library, name, and email, ensuring that 
-                /// the constructor validations are triggered correcly.
-                /// </summary>
-                /// <seealso cref="Person.Navn"/>
-                /// <seealso cref="Person.Email"/>
-                void OpretLaaner()
-                {
-                    
-                    // BEMÆRK: Refactored kode. Funktionelt set det samme, men nu anvendes der en FindIndex metode til at finde indekset for den (just forinden) oprettede bruger.
-                    // Dette gøres for at de resterende værdier skal sættes for at valideringerne tager effekt, og ikke overføres via parametre i kaldet, 
-                    // hvilket forbigår get/set funktionaliteterne.
-                    // ID'et udregnes dynamisk ud fra størrelsen på listLaaner collectionen, da antallet af elementer i den, tildeles dynamisk ift til tilføjelser.
-                    // Dog ikke "idiot-sikker", da det kunne tænkes at en tidligere bruger slettes, hvorved en efterfølgende ny bruger ville
-                    // kunne risikeres at få tildelt samme bruger ID
-                    int laanID = (listLaaner.Count) + 1;
-                    
-
-                    listLaaner.Add(new Laaner(laanID));
-                    int laanIDIndex = listLaaner.FindIndex(x => x.laanerNummer == laanID);
-                    Console.Write("Angiv biblioteket: \n>");
-                    listLaaner[laanIDIndex].bibliotek = Console.ReadLine();
-                    Console.Write("Angiv Låners Navn: \n>");
-                    listLaaner[laanIDIndex].Navn = Console.ReadLine();
-                    Console.Write("Angiv Låners Email: \n>");
-                    listLaaner[laanIDIndex].Email = Console.ReadLine();
-
-                    Console.WriteLine();
-                }
-
             } while (contMenu == true);
+
+            
+            
             #endregion
 
             #region Gem og Læs metode
@@ -210,7 +215,7 @@ namespace Bibliotek
 
                 foreach (Laaner p in listLaaner)
                 {
-                    string saveLaaner = $"{p.laanerNummer};{p.Navn};{p.Email};{p.bibliotek}";
+                    string saveLaaner = $"{p.LaanerNummer};{p.Navn};{p.Email};{p.Bibliotek}";
                     foreach (Bog laantBog in p.laanteBoeger)
                     {
                         saveLaaner += $";{laantBog.ISBN}";
@@ -250,17 +255,17 @@ namespace Bibliotek
                     {
                         // Hvert element opdeles ved hver ';':
                         string[] data = s.Split(';');
-                        if (listLaaner.Any(x => x.laanerNummer == int.Parse(data[0])) == false)     // Der tjekkes om låneren allerede eksisterer i systemet. Her bruges ID og ikke Index
+                        if (listLaaner.Any(x => x.LaanerNummer == int.Parse(data[0])) == false)     // Der tjekkes om låneren allerede eksisterer i systemet. Her bruges ID og ikke Index
                         {
                             
                             int laanID = listLaaner.Count + 1; // Nyt ID oprettes ud fra størrelsen på listLaaner collectionen.
                             listLaaner.Add(new Laaner(laanID)); // Låneren tilføjes via de nye ID
-                            int laanIDIndex = listLaaner.FindIndex(x => x.laanerNummer == laanID); // Og det nye entrys index lokaliseres
+                            int laanIDIndex = listLaaner.FindIndex(x => x.LaanerNummer == laanID); // Og det nye entrys index lokaliseres
 
                             // Hvorefter vi kan bruge set til at angive værdierne lagret i arrayet, ud fra et standardiseret format (ID;Navn;Email;Bibliotek;Bog;Bog;Bog;[...])
                             listLaaner[laanIDIndex].Navn = data[1]; 
                             listLaaner[laanIDIndex].Email = data[2];
-                            listLaaner[laanIDIndex].bibliotek = data[3];
+                            listLaaner[laanIDIndex].Bibliotek = data[3];
                             
                             // For hvert element udover det fjerde (dvs for hver bog), bruges værdien til at registrere den pågælden bog som udlejet til låneren
                             for (int i = 0; i < (data.Length - 4); i++)
@@ -283,33 +288,23 @@ namespace Bibliotek
             #endregion
         }
 
-        static void UdskrivLaanere(List<Laaner> arrLaaner)
-        {
-            foreach (Laaner laaner in arrLaaner)
-            {
-                Console.WriteLine(laaner.HentLaaner());
-            }
-        }
         
-        static void UdskrivLaaner(List<Laaner> arrLaaner, int laaner)
-        {
-            // Bemærk at der her fratrækkes 1, for at gøre funktionaliteten mere almen menneskevenlig (eftersom vi ikke bør antage, 
-            // at alle ved, at indeks starter fra 0, men at de fleste antager det starter ved 1.
-            Console.WriteLine(arrLaaner[laaner-1].HentLaaner());
-        }
 
 
         #region User priming method.
         static void WaitTimer()
         {
-            Console.Write(".");
-            Thread.Sleep(500);
-            Console.Write(".");
-            Thread.Sleep(500);
-            Console.Write(".");
-            Thread.Sleep(500);
-            Console.Write(".");
-            Thread.Sleep(500);
+            while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+            {
+                Console.Write(".");
+                Thread.Sleep(500);
+                Console.Write(".");
+                Thread.Sleep(500);
+                Console.Write(".");
+                Thread.Sleep(500);
+                Console.Write(".");
+                Thread.Sleep(500);
+            }
         }
         #endregion
 
