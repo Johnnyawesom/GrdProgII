@@ -294,17 +294,15 @@ namespace Bibliotek
         #region User priming method.
         static void WaitTimer()
         {
-            while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
-            {
-                Console.Write(".");
-                Thread.Sleep(500);
-                Console.Write(".");
-                Thread.Sleep(500);
-                Console.Write(".");
-                Thread.Sleep(500);
-                Console.Write(".");
-                Thread.Sleep(500);
-            }
+           
+            Console.Write(".");
+            Thread.Sleep(200);
+            Console.Write(".");
+            Thread.Sleep(200);
+            Console.Write(".");
+            Thread.Sleep(200);
+            Console.Write(".");
+            Thread.Sleep(200);
         }
         #endregion
 

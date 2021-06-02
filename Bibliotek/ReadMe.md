@@ -16,7 +16,7 @@ for i den oprindelige formulering.
   - Added new "List all books" function.
   - Refactored code to ensure logical coherence between classes and methods
   - Redesigned menu to be more reader-friendly
-  - Added keylisten to intro section to allow for skipping (still minor issue with mid-sequence execution)
+  - Made intro a bit more tolerable (reduced time to execute)
   
 - v1.2
   - Expanded Load function so that it now mounts data, rather than simply displaying it.
