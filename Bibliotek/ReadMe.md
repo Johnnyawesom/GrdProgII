@@ -12,6 +12,9 @@ for i den oprindelige formulering.
 
 ----
 ### Changelog:
+- v1.3.1
+  - Minor inconsequential refactoring and cosmetic touch-ups.
+ 
 - v1.3.0
   - Added new "List all books" function.
   - Refactored code to ensure logical coherence between classes and methods
